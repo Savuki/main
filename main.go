@@ -90,9 +90,13 @@ func main() {
 	})
 
 	http.HandleFunc("/requestJson", func(w http.ResponseWriter, r *http.Request) {
-		path := "person%s.txt"
+		err = os.Mkdir("Persons", 0777)
+		path := `Persons\person%s.txt`
 		numberPath := fmt.Sprintf(path, strconv.Itoa(counter))
 		fileJson, err := os.OpenFile(numberPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		if err != nil {
+			fmt.Println(err)
+		}
 		unmarshalBody := requestJson{}
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
@@ -102,10 +106,11 @@ func main() {
 		if err != nil {
 			fmt.Println(err)
 		}
+		fmt.Println(string(body))
 		marshalAge, err := json.Marshal(unmarshalBody.Age)
 		marshalBool, err := json.Marshal(unmarshalBody.IsAdmin)
 
-		fileJson.Write(([]byte)("Name: "))
+		fileJson.Write(([]byte)("Name: ")) // fmt.sprintf
 		fileJson.Write(([]byte)(unmarshalBody.Name))
 		fileJson.Write(([]byte)(`, `))
 		fileJson.Write(([]byte)("SecondName: "))
@@ -120,6 +125,8 @@ func main() {
 		fileJson.Write(([]byte)(date))
 		fileJson.Write(([]byte)("\n"))
 		counter++
+		defer os.RemoveAll("Persons")
+
 	})
 
 	http.ListenAndServe(":80", nil)

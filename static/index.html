@@ -4,7 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Ввод данных</title>
-    <link rel="stylesheet" href="styles.css">
+    <style type="text/css">
+        .on {
+            border: 1px outset;
+            color: #369;
+            background: #efefef;
+        }
+
+        .off {
+            border: 1px outset;
+            color: #369;
+            background: #f9d543;
+        }
+    </style>
 </head>
 
 <body>
@@ -21,21 +33,30 @@
             <input type="text" id="name" name="value" />
             <input type="text" id="secondName" name="value" />
             <input type="text" id="age" name="value" />
-            <label class="checkbox-green" id="switch">
-                <input type="checkbox">
-                <span class="checkbox-green-switch" data-label-on="true" data-label-off="" ></span>
-            </label><br>
+            <input type="checkbox" id="isAdmin" name="scales" checked />
+            <br>
             <input type="button" id="sendJson" value="Отправить форму" />
         </div>
     </div>
 </body>
 <script>
+    // adminBool = ""
+    // function togglestyle(el) {
+    //     if (el.className == "on") {
+    //         el.className = "off";
+    //         adminBool = ""
+    //     } else {
+    //         el.className = "on";
+    //        adminBool = "1"
+    //     }
+    // }
+
     function sendForm() {
         let form = {
             Name: document.getElementById("name").value,
             SecondName: document.getElementById("secondName").value,
             Age: Math.round(document.getElementById("age").value),
-            IsAdmin: !!document.getElementById("switch").value
+            IsAdmin: document.getElementById("isAdmin").checked
         }
         let json = JSON.stringify(form)
         console.log(json)
