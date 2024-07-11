@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ввод данных</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div>
+        <h2>Ввод данных</h2>
+        <input type="text" id="value" name="value" /><br><br>
+        <p id="fileStatus"></p>
+        <br>
+        <input type="button" id="send" value="Отправить" />
+        <input type="button" id="delete" value="Удалить" />
+        <input type="button" id="create" value="Создать файл" />
+        <br><br>
+        <div>
+            <input type="text" id="name" name="value" />
+            <input type="text" id="secondName" name="value" />
+            <input type="text" id="age" name="value" />
+            <label class="checkbox-green" id="switch">
+                <input type="checkbox">
+                <span class="checkbox-green-switch" data-label-on="true" data-label-off="" ></span>
+            </label><br>
+            <input type="button" id="sendJson" value="Отправить форму" />
+        </div>
+    </div>
+</body>
+<script>
+    function sendForm() {
+        let form = {
+            Name: document.getElementById("name").value,
+            SecondName: document.getElementById("secondName").value,
+            Age: Math.round(document.getElementById("age").value),
+            IsAdmin: !!document.getElementById("switch").value
+        }
+        let json = JSON.stringify(form)
+        console.log(json)
+        fetch("/requestJson", { method: "POST", body: json })
+    }
+    document.getElementById("sendJson").onclick = function () {
+        sendForm()
+    }
+
+    setInterval(() => fetch("/isExist", { method: "POST" })
+        .then(response => response.text())
+        .then(responseText => {
+            if (responseText == "true") {
+                document.getElementById("fileStatus").innerHTML = "Файл существует"
+            } else {
+                document.getElementById("fileStatus").innerHTML = "Файл отсутсвует"
+            }
+        }), 1000)
+
+    document.getElementById("send").onclick = function () {
+        console.log(document.getElementById("value").value)
+        fetch("/send", { method: "POST", body: document.getElementById("value").value })
+    }
+
+    document.getElementById("delete").onclick = function () {
+        fetch("/delete", { method: "POST", body: "1" })
+    }
+
+    document.getElementById("create").onclick = function () {
+        fetch("/create", { method: "POST" })
+    }
+
+</script>
+
+</html>
