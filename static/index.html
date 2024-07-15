@@ -37,21 +37,9 @@
             <br>
             <input type="button" id="sendJson" value="Отправить форму" />
         </div>
-    </div>
-</body>
-<script>
-    // adminBool = ""
-    // function togglestyle(el) {
-    //     if (el.className == "on") {
-    //         el.className = "off";
-    //         adminBool = ""
-    //     } else {
-    //         el.className = "on";
-    //        adminBool = "1"
-    //     }
-    // }
-
-    function sendForm() {
+        <br>
+        <script>
+function sendForm() {
         let form = {
             Name: document.getElementById("name").value,
             SecondName: document.getElementById("secondName").value,
@@ -61,10 +49,39 @@
         let json = JSON.stringify(form)
         console.log(json)
         fetch("/requestJson", { method: "POST", body: json })
+            .then(response => response.json())
+            .then(json => WritePerson(json))
+
+        function WritePerson(r) {
+            responseValue = JSON.stringify(r)
+            var name = responseValue.Name,
+            secondName = responseValue.secondName,
+            age = responseValue.Age,
+            divName = document.createElement("DIV"),
+            txtName = document.createTextNode(name),
+            divSecondName = document.createElement("DIV"),
+            txtSecondName = document.createTextNode(secondName),
+            divAge = document.createElement("DIV"),
+            txtAge = document.createTextNode(age);
+
+            divName.appendChild(txtName);
+            divSecondName.appendChild(txtSecondName);
+            divAge.appendChild(txtAge);
+
+            document.body.appendChild(divName)
+            document.body.appendChild(divSecondName)
+            document.body.appendChild(divAge)
+        }
     }
     document.getElementById("sendJson").onclick = function () {
         sendForm()
     }
+        </script>
+    </div>
+</body>
+<script>
+
+    
 
     setInterval(() => fetch("/isExist", { method: "POST" })
         .then(response => response.text())
@@ -75,6 +92,7 @@
                 document.getElementById("fileStatus").innerHTML = "Файл отсутсвует"
             }
         }), 1000)
+
 
     document.getElementById("send").onclick = function () {
         console.log(document.getElementById("value").value)

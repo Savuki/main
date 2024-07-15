@@ -97,7 +97,7 @@ func main() {
 		if err != nil {
 			fmt.Println(err)
 		}
-		unmarshalBody := requestJson{}
+		var unmarshalBody requestJson
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
 			fmt.Println(err)
@@ -106,26 +106,10 @@ func main() {
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println(string(body))
-		marshalAge, err := json.Marshal(unmarshalBody.Age)
-		marshalBool, err := json.Marshal(unmarshalBody.IsAdmin)
-
-		fileJson.Write(([]byte)("Name: ")) // fmt.sprintf
-		fileJson.Write(([]byte)(unmarshalBody.Name))
-		fileJson.Write(([]byte)(`, `))
-		fileJson.Write(([]byte)("SecondName: "))
-		fileJson.Write(([]byte)(unmarshalBody.SecondName))
-		fileJson.Write(([]byte)(`, `))
-		fileJson.Write(([]byte)("Age: "))
-		fileJson.Write(marshalAge)
-		fileJson.Write(([]byte)(`, `))
-		fileJson.Write(([]byte)("IsAdmin: "))
-		fileJson.Write(marshalBool)
-		fileJson.Write(([]byte)(`, `))
-		fileJson.Write(([]byte)(date))
-		fileJson.Write(([]byte)("\n"))
+		text := fmt.Sprintf(`Name: %s, SecondName: %s, Age: %d, IsAdmin: %t`, unmarshalBody.Name, unmarshalBody.SecondName, unmarshalBody.Age, unmarshalBody.IsAdmin)
+		fileJson.Write(([]byte)(text))
+		w.Write(body)
 		counter++
-		defer os.RemoveAll("Persons")
 
 	})
 
